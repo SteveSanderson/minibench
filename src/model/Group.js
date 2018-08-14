@@ -14,11 +14,24 @@ export class Group extends EventEmitter {
     }
 
     runAll() {
-        this.benchmarks.forEach(b => b.run());
+        this.benchmarks.forEach((benchmark, index) => {
+            benchmark.run({
+                skipGroupSetup: index > 0,
+                skipGroupTeardown: index < this.benchmarks.length - 1,
+            });
+        });
     }
 
     stopAll() {
         this.benchmarks.forEach(b => b.stop());
+    }
+
+    async runSetup() {
+        this.setup && await this.setup();
+    }
+
+    async runTeardown() {
+        this.teardown && await this.teardown();
     }
 
     get status() {

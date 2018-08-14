@@ -2,16 +2,25 @@ import { group, benchmark, setup, teardown, HtmlUI } from '../src/minibench.js';
 
 group('Basic functions', () => {
     setup(async () => {
-        await delay(100); // Just to show we can do async setup
+        // Just to show we can do async setup at the group level
+        // Runs once before all tests in the group
+        console.log('In Basic functions setup');
+        await delay(100);
     });
 
     teardown(async () => {
-        await delay(100); // Just to show we can do async teardown
+        // Just to show we can do async teardown at the group level
+        // Runs once after all tests in the group
+        console.log('In Basic functions teardown');
+        await delay(100);
     });
 
     benchmark('Async operation', async () => {
         await delay(500);
         if (1 + 1 !== 2) { throw new Error('bad'); }
+    }, {
+        setup: () => console.log('In setup for Async operation'), // Per-benchmark setup
+        teardown: () => console.log('In teardown for Async operation'), // Per-benchmark teardown
     });
 
     benchmark('Sum of logs', () => {
