@@ -1,6 +1,6 @@
 {
   "name": "@stevesanderson/minibench",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple harness for benchmarking JavaScript code.",
   "main": "src/minibench.js",
   "scripts": {
