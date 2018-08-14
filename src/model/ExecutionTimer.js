@@ -31,7 +31,7 @@ import { nextTickPromise } from './NextTick.js';
 
 const totalDurationMs = 6000;
 const blockDurationMs = 400;
-const minExecutions = 5;
+const minExecutions = 10;
 
 export class ExecutionTimer {
     constructor(fn) {

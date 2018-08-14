@@ -39,7 +39,7 @@ export class BenchmarkDisplay {
         this.numExecutionsText.textContent = state.numExecutions
             ? `Executions: ${state.numExecutions}` : '';
         this.executionDurationText.innerHTML = state.estimatedExecutionDurationMs
-            ? `Duration: <b>${state.estimatedExecutionDurationMs.toPrecision(3)}ms</b>` : '';
+            ? `Duration: <b>${parseFloat(state.estimatedExecutionDurationMs.toPrecision(3))}ms</b>` : '';
         if (state.status === BenchmarkStatus.idle) {
             this.runButton.setAttribute('href', '');
         } else {
