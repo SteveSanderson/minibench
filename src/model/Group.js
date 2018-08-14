@@ -13,12 +13,12 @@ export class Group extends EventEmitter {
         benchmark.on('changed', () => this._emit('changed'));
     }
 
-    runAll() {
+    runAll(runOptions) {
         this.benchmarks.forEach((benchmark, index) => {
-            benchmark.run({
+            benchmark.run(Object.assign({
                 skipGroupSetup: index > 0,
                 skipGroupTeardown: index < this.benchmarks.length - 1,
-            });
+            }, runOptions));
         });
     }
 

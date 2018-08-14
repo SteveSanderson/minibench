@@ -2,7 +2,7 @@ import { BenchmarkDisplay } from './BenchmarkDisplay.js';
 import { BenchmarkStatus } from '../model/Benchmark.js';
 
 export class GroupDisplay {
-    constructor(group) {
+    constructor(htmlUi, group) {
         this.group = group;
 
         this.elem = document.createElement('div');
@@ -21,7 +21,7 @@ export class GroupDisplay {
         this.runButton.textContent = 'Run all';
         this.runButton.onclick = evt => {
             evt.preventDefault();
-            group.runAll();
+            group.runAll(htmlUi.globalRunOptions);
         };
 
         const table = this.elem.appendChild(document.createElement('table'));
@@ -29,7 +29,7 @@ export class GroupDisplay {
         const tbody = table.appendChild(document.createElement('tbody'));
 
         group.benchmarks.forEach(benchmark => {
-            const benchmarkDisplay = new BenchmarkDisplay(benchmark);
+            const benchmarkDisplay = new BenchmarkDisplay(htmlUi, benchmark);
             tbody.appendChild(benchmarkDisplay.elem);
         });
 

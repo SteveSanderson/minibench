@@ -38,20 +38,25 @@ export class ExecutionTimer {
         this._fn = fn;
     }
 
-    async run(progressCallback) {
+    async run(progressCallback, runOptions) {
         this._isAborted = false;
         this.numExecutions = 0;
         this.bestExecutionsPerMs = null;
 
-        const endTime = performance.now() + totalDurationMs;
-        while (performance.now() < endTime || this.numExecutions < minExecutions) {
+        // 'verify only' means just do a single execution to check it doesn't error
+        const targetBlockDuration = runOptions.verifyOnly ? 1 : blockDurationMs;
+        const targetMinExecutions = runOptions.verifyOnly ? 1 : minExecutions;
+        const targetTotalDuration = runOptions.verifyOnly ? 0 : totalDurationMs;
+
+        const endTime = performance.now() + targetTotalDuration;
+        while (performance.now() < endTime || this.numExecutions < targetMinExecutions) {
             if (this._isAborted) {
                 this.numExecutions = 0;
                 this.bestExecutionsPerMs = null;
                 break;
             }
 
-            const { blockDuration, blockExecutions } = await this._runBlock();
+            const { blockDuration, blockExecutions } = await this._runBlock(targetBlockDuration);
             this.numExecutions += blockExecutions;
 
             const blockExecutionsPerMs = blockExecutions / blockDuration;
@@ -67,11 +72,11 @@ export class ExecutionTimer {
         this._isAborted = true;
     }
 
-    async _runBlock() {
+    async _runBlock(targetBlockDuration) {
         await nextTickPromise();
 
         const blockStartTime = performance.now();
-        const blockEndTime = blockStartTime + blockDurationMs;
+        const blockEndTime = blockStartTime + targetBlockDuration;
         let executions = 0;
 
         while ((performance.now() < blockEndTime) && !this._isAborted) {

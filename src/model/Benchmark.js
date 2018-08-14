@@ -28,7 +28,7 @@ export class Benchmark extends EventEmitter {
 
                     this._updateState({ status: BenchmarkStatus.running });
                     this._options && this._options.setup && await this._options.setup();
-                    await this._measureTimings();
+                    await this._measureTimings(runOptions);
 
                     this._options && this._options.teardown && await this._options.teardown();
                     if (this._currentRunWasAborted || !(runOptions && runOptions.skipGroupTeardown)) {
@@ -51,7 +51,7 @@ export class Benchmark extends EventEmitter {
         this._updateState({ status: BenchmarkStatus.idle });
     }
 
-    async _measureTimings() {
+    async _measureTimings(runOptions) {
         this._updateState({ numExecutions: 0, estimatedExecutionDurationMs: null });
 
         this.timer = new ExecutionTimer(this._fn);
@@ -62,7 +62,7 @@ export class Benchmark extends EventEmitter {
             });
         };
 
-        await this.timer.run(updateTimingsDisplay);
+        await this.timer.run(updateTimingsDisplay, { verifyOnly: runOptions.verifyOnly });
         updateTimingsDisplay()
         this.timer = null;
     }

@@ -1,7 +1,7 @@
 import { BenchmarkStatus } from '../model/Benchmark.js';
 
 export class BenchmarkDisplay {
-    constructor(benchmark) {
+    constructor(htmlUi, benchmark) {
         this.benchmark = benchmark;
         this.elem = document.createElement('tr');
         
@@ -25,7 +25,7 @@ export class BenchmarkDisplay {
         this.runButton.textContent = 'Run';
         this.runButton.onclick = evt => {
             evt.preventDefault();
-            this.benchmark.run();
+            this.benchmark.run(htmlUi.globalRunOptions);
         };
 
         benchmark.on('changed', state => this.updateDisplay(state));
